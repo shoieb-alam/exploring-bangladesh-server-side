@@ -21,7 +21,7 @@ async function run() {
         console.log('DB connected');
         const database = client.db("traveller");
         const servicesCollection = database.collection("users");
-        const bookingCollection = database.collection('bookings');
+        const bookingCollection = database.collection("bookings");
 
         // GET API 
         app.get('/services', async (req, res) => {
@@ -64,14 +64,17 @@ async function run() {
         })
 
         // GET Bookings 
-        app.get('/mybooking', async (req, res) => {
-            const id = req.params.id;
-            // console.log('getting specific service', id);
-            const query = { _id: ObjectId(id) };
-            const service = await servicesCollection.find({});
-            res.json(service);
+        app.get('/myPackages/:email', async (req, res) => {
+            const result = await bookingCollection.find({ email: req.params.email, }).toArray();
+            res.send(result);
         })
 
+        //Delete Booking
+        app.delete('/myPackages/:email', async (req, res) => {
+            console.log(req.params.email);
+            const result = await bookingCollection.deleteOne({ email: req.params.email });
+            res.send(result);
+        })
 
     }
 
