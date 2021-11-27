@@ -1,15 +1,13 @@
 # X-PLORING BANGLADESH
 
 
-This is Serverside repository of a CRUD project on the tourism related site [X-PLORING BANGLADESH](https://tourism-website-b846d.web.app/).
+This is server side repository of a web application using MERN Stack for providing travel services [X-PLORING BANGLADESH](https://tourism-website-b846d.web.app/).
 
 
 ## KEY Features
 
-* Creating new tour packages
-* Deleting existing packages
-* MongoDB Atlas used as a Database.
+* Selecting a package with a private route leads to the user to checkout page.
+* Users can see his/her packages and delete ordered packages from the dashboard
+* Admins can add new packages and delete any packages.
 * Day wise tour details showing on booking page.
 * Simple login system using google.
-* Attractive packages for tour lovers
-* Exploring key tourist spots with reasonable price.
