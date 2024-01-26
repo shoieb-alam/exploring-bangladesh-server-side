@@ -1,7 +1,7 @@
-const express = require('express');
-const { MongoClient } = require('mongodb');
-const cors = require('cors');
-require('dotenv').config();
+const express = require("express");
+const { MongoClient } = require("mongodb");
+const cors = require("cors");
+require("dotenv").config();
 const ObjectId = require("mongodb").ObjectId;
 
 const app = express();
@@ -13,83 +13,85 @@ app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.8su0x.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+const client = new MongoClient(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
 
 async function run() {
     try {
-        await client.connect();
-        console.log('DB connected');
+        client.connect();
+        console.log("DB connected");
         const database = client.db("traveller");
         const servicesCollection = database.collection("users");
         const bookingCollection = database.collection("bookings");
 
-        // GET API 
-        app.get('/services', async (req, res) => {
+        // GET API
+        app.get("/services", async (req, res) => {
             const cursor = servicesCollection.find({});
             const services = await cursor.toArray();
             res.send(services);
         });
 
-        // GET SINGLE SERVICE 
-        app.get('/services/:id', async (req, res) => {
+        // GET SINGLE SERVICE
+        app.get("/services/:id", async (req, res) => {
             const id = req.params.id;
             // console.log('getting specific service', id);
             const query = { _id: ObjectId(id) };
             const service = await servicesCollection.findOne(query);
             res.json(service);
-        })
+        });
 
-        // POST API 
-        app.post('/services', async (req, res) => {
+        // POST API
+        app.post("/services", async (req, res) => {
             const service = req.body;
-            console.log('hit the post api', service);
+            console.log("hit the post api", service);
             const result = await servicesCollection.insertOne(service);
             console.log(result);
             res.json(result);
         });
 
-        // DELETE API   
-        app.delete('/services/:id', async (req, res) => {
+        // DELETE API
+        app.delete("/services/:id", async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const result = await servicesCollection.deleteOne(query);
             res.json(result);
         });
 
-        // Add Booking API 
-        app.post('/bookings', async (req, res) => {
+        // Add Booking API
+        app.post("/bookings", async (req, res) => {
             const booking = req.body;
             const result = await bookingCollection.insertOne(booking);
             res.json(result);
-        })
+        });
 
-        // GET Bookings 
-        app.get('/myPackages/:email', async (req, res) => {
-            const result = await bookingCollection.find({ email: req.params.email, }).toArray();
+        // GET Bookings
+        app.get("/myPackages/:email", async (req, res) => {
+            const result = await bookingCollection
+                .find({ email: req.params.email })
+                .toArray();
             res.send(result);
-        })
+        });
 
         //Delete Booking
-        app.delete('/myPackages/:email', async (req, res) => {
+        app.delete("/myPackages/:email", async (req, res) => {
             console.log(req.params.email);
-            const result = await bookingCollection.deleteOne({ email: req.params.email });
+            const result = await bookingCollection.deleteOne({
+                email: req.params.email,
+            });
             res.send(result);
-        })
-
-    }
-
-    finally {
+        });
+    } finally {
         // await client.close();
     }
-
 }
 run().catch(console.dir);
 
-
-app.get('/', (req, res) => {
-    res.send('Running my CRUD server');
+app.get("/", (req, res) => {
+    res.send("Running my CRUD server");
 });
 
 app.listen(port, () => {
-    console.log('Running server on port', port);
+    console.log("Running server on port", port);
 });
